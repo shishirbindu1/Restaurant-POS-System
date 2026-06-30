@@ -122,6 +122,9 @@ wrapMenu.addEventListener("click", (e) => {
   addItemToCart(id);
 });
 
+// reset button eventlistener
+
+
 // ─── Init ─────────────────────────────────────────────────────
 generateTables();
 generateMenu();
