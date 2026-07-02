@@ -2,25 +2,25 @@ import menuItems from "./menuData.js";
 
 // ─── DOM Elements ───────────────────────────────────────────
 const tableContainer = document.querySelector(".totalTable");
-const wrapMenu       = document.querySelector(".wrapMenu");
-const backButton     = document.querySelector(".backButton");
-const selectedTable  = document.querySelector(".selectedTable");
-const menu           = document.querySelector(".menu");
-const cartItems      = document.querySelector(".cartItems");
-const totalPrice     = document.querySelector(".totalPrice");
+const wrapMenu = document.querySelector(".wrapMenu");
+const backButton = document.querySelector(".backButton");
+const selectedTable = document.querySelector(".selectedTable");
+const menu = document.querySelector(".menu");
+const cartItems = document.querySelector(".cartItems");
+const totalPrice = document.querySelector(".totalPrice");
 
 // ─── State ──────────────────────────────────────────────────
 let currentTable = null;
-let table=10
-let cart    = {};
+let table = 10;
+let cart = {};
 
 // ─── Generate Tables ────────────────────────────────────────
 function generateTables() {
   for (let i = 1; i <= 10; i++) {
     const tableDiv = document.createElement("div");
-    tableDiv.className    = "table w-28 h-28 border border-red-500";
+    tableDiv.className = "table w-28 h-28 border border-red-500";
     tableDiv.dataset.table = i;
-    tableDiv.textContent  = i;
+    tableDiv.textContent = i;
     tableContainer.appendChild(tableDiv);
   }
 }
@@ -35,9 +35,16 @@ function generateMenu() {
       <p class="text-gray-600">${item.description}</p>
       <div class="mt-3 flex justify-between items-center">
         <span class="font-bold">Rs. ${item.price}</span>
-        <button type="button" class="addToCart px-3 py-1 bg-green-500 text-white rounded" data-item-id="${item.id}">
-          Add
-        </button>
+        <div class="buttonAppreance">
+    <button type="button" class="addToCart px-3 py-1 bg-green-500 text-white rounded" data-item-id="${item.id}">
+      Add
+    </button>
+    <div class="secondOption px-1 py-1 bg-green-500 text-white rounded  text-center " data-item-id="${item.id}">
+      <button class="hover:bg-green-600 hover:rounded-full m-1 ">-</button>
+      <span>1</span>
+      <button class="hover:bg-green-600 hover:rounded-full m-1 ">+</button>
+    </div>
+  </div>
       </div>
     `;
     wrapMenu.appendChild(card);
@@ -53,8 +60,8 @@ function setActiveTable(tableDiv) {
 }
 //——————create array object——————————————————————————
 
-for(let i=1;i<=table; i++){
-  cart[i]=[]
+for (let i = 1; i <= table; i++) {
+  cart[i] = [];
 }
 
 // ─── Add Item To Cart ────────────────────────────────────────
@@ -62,7 +69,9 @@ function addItemToCart(id) {
   const selectedItem = menuItems.find((item) => item.id === id);
   if (!selectedItem) return;
 
-  const itemExist = cart[currentTable].find((item) => item.name === selectedItem.name);
+  const itemExist = cart[currentTable].find(
+    (item) => item.name === selectedItem.name
+  );
   if (itemExist) {
     itemExist.quantity = (itemExist.quantity || 1) + 1;
   } else {
@@ -92,6 +101,10 @@ function renderCart() {
   totalPrice.innerText = `Rs. ${total.toFixed(2)}`;
 }
 
+//display button
+
+
+
 // ─── Event Listeners ─────────────────────────────────────────
 
 // table click
@@ -102,7 +115,7 @@ tableContainer.addEventListener("click", (e) => {
   setActiveTable(table);
 
   currentTable = table.dataset.table;
-  renderCart()
+  renderCart();
   selectedTable.innerText = `Table: ${currentTable}`;
 
   tableContainer.classList.add("hidden");
@@ -120,10 +133,10 @@ wrapMenu.addEventListener("click", (e) => {
   if (!e.target.classList.contains("addToCart")) return;
   const id = Number(e.target.dataset.itemId);
   addItemToCart(id);
+ 
 });
 
 // reset button eventlistener
-
 
 // ─── Init ─────────────────────────────────────────────────────
 generateTables();

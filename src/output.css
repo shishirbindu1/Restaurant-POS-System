@@ -9,6 +9,7 @@
       "Courier New", monospace;
     --color-red-500: oklch(63.7% 0.237 25.331);
     --color-green-500: oklch(72.3% 0.219 149.579);
+    --color-green-600: oklch(62.7% 0.194 149.214);
     --color-gray-300: oklch(87.2% 0.01 258.338);
     --color-gray-600: oklch(44.6% 0.03 256.802);
     --color-white: #fff;
@@ -172,6 +173,9 @@
   }
 }
 @layer utilities {
+  .m-1 {
+    margin: var(--spacing);
+  }
   .my-10 {
     margin-block: calc(var(--spacing) * 10);
   }
@@ -250,6 +254,9 @@
   .bg-green-500 {
     background-color: var(--color-green-500);
   }
+  .px-1 {
+    padding-inline: var(--spacing);
+  }
   .px-3 {
     padding-inline: calc(var(--spacing) * 3);
   }
@@ -295,6 +302,20 @@
   }
   .text-white {
     color: var(--color-white);
+  }
+  .hover\:rounded-full {
+    &:hover {
+      @media (hover: hover) {
+        border-radius: calc(infinity * 1px);
+      }
+    }
+  }
+  .hover\:bg-green-600 {
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--color-green-600);
+      }
+    }
   }
 }
 @property --tw-border-style {
