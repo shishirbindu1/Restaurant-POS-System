@@ -41,7 +41,7 @@ function generateMenu() {
     </button>
     <div class="secondOption px-1 py-1 bg-green-500 text-white rounded  text-center hidden " >
       <button class="decrease hover:bg-green-600 hover:rounded-full m-1 " data-item-id="${item.id}">-</button>
-      <span class="displayQuantity>1</span>
+      <span class="displayQuantity">1</span>
       <button class="increase hover:bg-green-600 hover:rounded-full m-1 " data-item-id="${item.id}">+</button>
     </div>
   </div>
@@ -133,10 +133,9 @@ wrapMenu.addEventListener("click", (e) => {
   addItemToCart(id);
   const card = e.target.closest(".card");
   const quantityControl = card.querySelector(".addToCart");
-  const secondButton = card.querySelector('.secondOption')
+  const secondButton = card.querySelector(".secondOption");
   quantityControl.classList.add("hidden");
-  secondButton.classList.remove('hidden')
-
+  secondButton.classList.remove("hidden");
 });
 
 // reset button eventlistener
