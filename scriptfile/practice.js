@@ -8,11 +8,13 @@ const selectedTable = document.querySelector(".selectedTable");
 const menu = document.querySelector(".menu");
 const cartItems = document.querySelector(".cartItems");
 const totalPrice = document.querySelector(".totalPrice");
+const payButton = document.querySelector(".payButton");
 
 // ─── State ──────────────────────────────────────────────────
 let currentTable = null;
 let table = 10;
 let cart = {};
+let quantity = 1;
 
 // ─── Generate Tables ────────────────────────────────────────
 function generateTables() {
@@ -41,7 +43,7 @@ function generateMenu() {
     </button>
     <div class="secondOption px-1 py-1 bg-green-500 text-white rounded  text-center hidden " >
       <button class="decrease hover:bg-green-600 hover:rounded-full m-1 " data-item-id="${item.id}">-</button>
-      <span class="displayQuantity">1</span>
+      <span class="displayQuantity">${quantity}</span>
       <button class="increase hover:bg-green-600 hover:rounded-full m-1 " data-item-id="${item.id}">+</button>
     </div>
   </div>
@@ -101,7 +103,31 @@ function renderCart() {
   totalPrice.innerText = `Rs. ${total.toFixed(2)}`;
 }
 
-//display button
+function resetMenuControls() {
+  const cards = document.querySelectorAll(".card");
+
+  cards.forEach((card) => {
+      const addButton = card.querySelector(".addToCart");
+      const secondButton = card.querySelector(".secondOption");
+
+      addButton.classList.remove("hidden");
+      secondButton.classList.add("hidden");
+  });
+}
+
+function updateTableStatus() {
+  const tables = document.querySelectorAll(".table");
+
+  tables.forEach((table) => {
+    const tableNumber = table.dataset.table;
+
+    if (cart[tableNumber].length > 0) {
+      table.classList.add("bg-green-500");
+    } else {
+      table.classList.remove("bg-green-500");
+    }
+  });
+}
 
 // ─── Event Listeners ─────────────────────────────────────────
 
@@ -114,6 +140,7 @@ tableContainer.addEventListener("click", (e) => {
 
   currentTable = table.dataset.table;
   renderCart();
+  
   selectedTable.innerText = `Table: ${currentTable}`;
 
   tableContainer.classList.add("hidden");
@@ -128,14 +155,47 @@ backButton.addEventListener("click", () => {
 
 // add to cart buttons
 wrapMenu.addEventListener("click", (e) => {
-  if (!e.target.classList.contains("addToCart")) return;
-  const id = Number(e.target.dataset.itemId);
-  addItemToCart(id);
   const card = e.target.closest(".card");
   const quantityControl = card.querySelector(".addToCart");
   const secondButton = card.querySelector(".secondOption");
-  quantityControl.classList.add("hidden");
-  secondButton.classList.remove("hidden");
+  if (e.target.classList.contains("addToCart")) {
+    const id = Number(e.target.dataset.itemId);
+    addItemToCart(id);
+    updateTableStatus();
+    quantityControl.classList.add("hidden");
+    secondButton.classList.remove("hidden");
+  } else {
+    renderCart();
+  }
+
+  if (e.target.classList.contains("increase")) {
+    const id = Number(e.target.dataset.itemId);
+    const cartItem = cart[currentTable].find((item) => item.id === id);
+    cartItem.quantity++;
+    updateTableStatus();
+    renderCart();
+  }
+  if (e.target.classList.contains("decrease")) {
+    const id = Number(e.target.dataset.itemId);
+    const cartItem = cart[currentTable].find((item) => item.id === id);
+    cartItem.quantity--;
+    if (cartItem.quantity === 0) {
+      const index = cart[currentTable].findIndex((item) => item.id === id);
+      cart[currentTable].splice(index, 1);
+      quantityControl.classList.remove("hidden");
+      secondButton.classList.add("hidden");
+    }
+    updateTableStatus();
+
+    renderCart();
+  }
+});
+
+payButton.addEventListener("click", () => {
+  cart[currentTable] = [];
+  renderCart();
+  resetMenuControls();
+  updateTableStatus();
 });
 
 // reset button eventlistener
